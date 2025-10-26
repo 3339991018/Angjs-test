@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="unilyNewsApp">
+  <head>
+    <meta charset="UTF-8" />
+    <title>UNILY News Summarizer</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+    <script src="app.module.js"></script>
+    <script src="services/news-repository.service.js"></script>
+    <script src="services/summarizer.service.js"></script>
+    <script src="services/slack-webhook.service.js"></script>
+    <script src="components/unily-news-summary/unily-news-summary.component.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="app-shell__header">
+        <h1>UNILY News Summarizer</h1>
+        <p>
+          This demo component listens to a UNILY news repository, produces bite-sized
+          summaries, and posts them to a Slack channel via webhook.
+        </p>
+      </header>
+      <section class="app-shell__content">
+        <unily-news-summary
+          site-url="https://intranet.unily.com"
+          repository-id="news-repository"
+          webhook-url="https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+          poll-interval="120000"
+        ></unily-news-summary>
+      </section>
+    </main>
+  </body>
+</html>
