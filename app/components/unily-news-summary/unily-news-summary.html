@@ -1,0 +1,55 @@
+<section class="news-summary" ng-class="{ 'news-summary--loading': $ctrl.isLoading }">
+  <div class="loading-indicator" ng-if="$ctrl.isLoading">
+    <span class="loading-indicator__spinner"></span>
+    <span>Connecting to UNILY news repository…</span>
+  </div>
+
+  <div class="summary-card" ng-if="$ctrl.error">
+    <div class="summary-card__body">
+      <strong>Error:</strong> {{$ctrl.error}}
+    </div>
+  </div>
+
+  <div class="summary-card" ng-repeat="article in $ctrl.articles track by article.id">
+    <div class="summary-card__header">
+      <h2 class="summary-card__title">{{article.summary.headline || article.title}}</h2>
+      <span class="summary-card__meta" ng-if="article.published">
+        {{article.published | date:'medium'}}
+      </span>
+    </div>
+
+    <div class="summary-card__body">
+      <p ng-repeat="bullet in article.summary.bullets track by $index">{{bullet}}</p>
+    </div>
+
+    <div class="summary-card__actions">
+      <button
+        type="button"
+        ng-click="$ctrl.sendToSlack(article)"
+        ng-disabled="article.isPosting"
+      >
+        {{article.isPosting ? 'Sharing…' : 'Share to Slack'}}
+      </button>
+      <a class="summary-card__status" ng-if="article.permalink" ng-href="{{article.permalink}}" target="_blank" rel="noopener">
+        View full article
+      </a>
+    </div>
+
+    <div
+      class="summary-card__status"
+      ng-if="article.slackStatus"
+      ng-class="{
+        'summary-card__status--success': article.slackStatus.state === 'success',
+        'summary-card__status--error': article.slackStatus.state === 'error'
+      }"
+    >
+      {{article.slackStatus.message}}
+    </div>
+  </div>
+
+  <div class="summary-card" ng-if="!$ctrl.isLoading && !$ctrl.error && !$ctrl.articles.length">
+    <div class="summary-card__body">
+      No news has been published yet. Newly published items will appear here automatically.
+    </div>
+  </div>
+</section>
