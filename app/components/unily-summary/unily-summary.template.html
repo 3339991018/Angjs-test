@@ -1,0 +1,74 @@
+<section>
+  <p class="hint">
+    Draft a summary for your Unily content (news, documents, events, etc.) and optionally send it to a Slack channel.
+    Toggle <strong>Dry run</strong> to inspect the payload without posting to Slack.
+  </p>
+
+  <div class="two-col">
+    <div>
+      <label for="type">Content type</label>
+      <select id="type" ng-model="$ctrl.formData.contentType">
+        <option>News</option>
+        <option>Document</option>
+        <option>Event</option>
+        <option>Update</option>
+      </select>
+    </div>
+    <div>
+      <label for="length">Target summary length (words)</label>
+      <input id="length" type="number" min="30" max="200" ng-model="$ctrl.formData.length" />
+    </div>
+    <div>
+      <label for="title">Title</label>
+      <input id="title" type="text" placeholder="Quarterly business update" ng-model="$ctrl.formData.title" />
+    </div>
+    <div>
+      <label for="link">Unily link (optional)</label>
+      <input id="link" type="url" placeholder="https://intranet.example.com/..." ng-model="$ctrl.formData.link" />
+    </div>
+  </div>
+
+  <div style="margin-top: 16px;">
+    <label for="body">Post body</label>
+    <textarea id="body" placeholder="Paste the body of your Unily content" ng-model="$ctrl.formData.body"></textarea>
+  </div>
+
+  <div style="margin-top: 16px;">
+    <label for="prompt">Slack prompt (optional)</label>
+    <textarea id="prompt" placeholder="Add a follow-up prompt for the channel" ng-model="$ctrl.formData.prompt"></textarea>
+  </div>
+
+  <div class="two-col" style="margin-top: 16px;">
+    <div>
+      <label for="channel">Slack channel</label>
+      <input id="channel" type="text" placeholder="#comms" ng-model="$ctrl.formData.channel" />
+    </div>
+    <div>
+      <label for="token">Slack bot token</label>
+      <input id="token" type="password" placeholder="xoxb-..." ng-model="$ctrl.formData.token" />
+    </div>
+  </div>
+
+  <div class="actions">
+    <label style="display:flex; align-items:center; gap:6px; font-weight:normal;">
+      <input type="checkbox" ng-model="$ctrl.formData.dryRun" /> Dry run (do not post to Slack)
+    </label>
+    <button type="button" class="secondary" ng-click="$ctrl.generate()">Generate summary</button>
+    <button type="button" ng-click="$ctrl.send()" ng-disabled="$ctrl.sending">{{$ctrl.sending ? 'Sending…' : 'Send to Slack'}}</button>
+  </div>
+
+  <div class="summary-preview" ng-if="$ctrl.summary">
+    <span class="badge">{{$ctrl.formData.contentType}}</span>
+    <strong>{{$ctrl.formData.title || 'Untitled post'}}</strong>
+    <div style="margin-top: 8px;">{{$ctrl.summary}}</div>
+  </div>
+
+  <div class="status" ng-if="$ctrl.status" ng-class="$ctrl.status.type">
+    {{$ctrl.status.message}}
+  </div>
+
+  <div class="summary-preview" ng-if="$ctrl.lastPayload">
+    <div style="font-weight:bold; margin-bottom:6px;">Slack payload preview</div>
+    <pre style="white-space: pre-wrap; word-break: break-word;">{{ $ctrl.lastPayload | json }}</pre>
+  </div>
+</section>
